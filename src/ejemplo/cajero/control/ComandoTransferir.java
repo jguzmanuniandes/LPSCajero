@@ -17,7 +17,7 @@ public class ComandoTransferir implements Comando {
 
 	@SuppressWarnings("resource")
 	@Override
-	public void ejecutar(Banco contexto) throws Exception {
+	public String ejecutar(Banco contexto) throws Exception {
 		
 		System.out.println("Transferencia de Dinero");
 		System.out.println();
@@ -26,12 +26,18 @@ public class ComandoTransferir implements Comando {
 		Scanner console = new Scanner(System.in);			
 		
 		// Ingresa los datos
-		System.out.println("Ingrese el número de cuenta origen");
-		String numeroCuentaOrigen = console.nextLine();
+		System.out.println("Ingrese el número de cuenta");
+		String numeroDeCuenta = console.nextLine();
+		System.out.println("Ingrese la clave de la cuenta: ");
+		String password = console.nextLine();
 		
-		Cuenta cuentaOrigen = contexto.buscarCuenta(numeroCuentaOrigen);
-		if (cuentaOrigen == null) {
-			throw new Exception("No existe cuenta con el número " + numeroCuentaOrigen);
+		Cuenta cuenta = contexto.buscarCuenta(numeroDeCuenta);
+		if (cuenta == null) {
+			throw new Exception("No existe cuenta con el número " + numeroDeCuenta);
+		}
+		
+		if(!cuenta.getClave().equals(password)) {
+			throw new Exception("Error");
 		}
 
 		System.out.println("Ingrese el número de cuenta destino");
@@ -51,12 +57,18 @@ public class ComandoTransferir implements Comando {
 			// si no se puede retirar, no se hace la consignación
 			
 			long valorNumerico = Long.parseLong(valor);
-			cuentaOrigen.retirar(valorNumerico);
+			saldoDespuesDeTransferir(cuenta, valorNumerico);
+			cuenta.retirar(valorNumerico);
 			cuentaDestino.consignar(valorNumerico);
 		
 		} catch (NumberFormatException e) {
 			throw new Exception("Valor a transferir no válido : " + valor);
 		}
+		return cuenta.getNumero();
+	}
+	
+	private long saldoDespuesDeTransferir(Cuenta cuenta, long valorNumerico) {
+		return cuenta.getSaldo() - valorNumerico;
 	}
 
 }

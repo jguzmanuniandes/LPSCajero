@@ -1,16 +1,19 @@
 package ejemplo.cajero;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import ejemplo.cajero.control.Comando;
 import ejemplo.cajero.control.ComandoConsignar;
+import ejemplo.cajero.control.ComandoConsultar;
 import ejemplo.cajero.control.ComandoListarCuentas;
 import ejemplo.cajero.control.ComandoRetirar;
 import ejemplo.cajero.control.ComandoTransferir;
 import ejemplo.cajero.modelo.Banco;
 import ejemplo.cajero.modelo.Cuenta;
+import ejemplo.cajero.modelo.Transaccion;
 
 /**
  * Simulador de un Cajero de Banco
@@ -21,8 +24,13 @@ public class Cajero {
 	 * Programa principal
 	 * @param args parámetros de línea de comandos. Son ignorados por el programa.
 	 */
+	
+	static ArrayList<Transaccion> transaccionesDiarias = new ArrayList<>();
+	
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
+		
+		Scanner console = new Scanner(System.in);
 		
 		// crea el banco
 		Banco banco = new Banco();
@@ -51,7 +59,7 @@ public class Cajero {
 			System.out.println("X.- Salir");
 			
 			// la clase Console no funciona bien en Eclipse
-			Scanner console = new Scanner(System.in);			
+			
 			String valorIngresado = console.nextLine();
 			
 			// obtiene el comando a ejecutar
@@ -60,7 +68,8 @@ public class Cajero {
 				
 				// intenta ejecutar el comando
 				try {
-					comandoSeleccionado.ejecutar(banco);
+					String idCuenta = comandoSeleccionado.ejecutar(banco);
+					transaccionesDiarias.add(new Transaccion(idCuenta, comandoSeleccionado.getNombre(), LocalDateTime.now()));
 					
 				} catch (Exception e) {
 					// si hay una excepción, muestra el mensaje
@@ -76,9 +85,15 @@ public class Cajero {
 			System.out.println();
 		} while ( !fin );
 		
+		System.out.println("Transacciones del dia de hoy");
+		getTransaccionesDiarias();
 		System.out.println("Gracias por usar el programa.");
 	}
 	
+	
+	private static ArrayList<Transaccion> getTransaccionesDiarias() {
+		return transaccionesDiarias;
+	}
 	
 	// Manejo de los comandos de la aplicación
 	// =======================================
@@ -89,10 +104,9 @@ public class Cajero {
 		// crea los comandos que se van a usar en la aplicación
 		List<Comando> comandos = new ArrayList<>();
 		
-		comandos.add(new ComandoListarCuentas());
+		//comandos.add(new ComandoListarCuentas());
+		comandos.add(new ComandoConsultar());
 		comandos.add(new ComandoRetirar());
-		comandos.add(new ComandoConsignar());
-		comandos.add(new ComandoTransferir());
 
 		return comandos;
 	}

@@ -23,6 +23,11 @@ public class Cuenta {
 		return saldo;
 	}
 	
+	// obtiene el valor del saldo
+	public String getClave() {
+		return clave;
+	}
+	
 	// cambia la clave de la cuenta
 	public void cambiarClave(String claveAnterior, String claveNueva) throws Exception {
 		

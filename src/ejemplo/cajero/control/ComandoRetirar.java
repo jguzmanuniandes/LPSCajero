@@ -17,7 +17,7 @@ public class ComandoRetirar implements Comando {
 
 	@SuppressWarnings("resource")
 	@Override
-	public void ejecutar(Banco contexto) throws Exception {
+	public String ejecutar(Banco contexto) throws Exception {
 		
 		System.out.println("Retiro de Dinero");
 		System.out.println();
@@ -28,10 +28,16 @@ public class ComandoRetirar implements Comando {
 		// Ingresa los datos
 		System.out.println("Ingrese el número de cuenta");
 		String numeroDeCuenta = console.nextLine();
+		System.out.println("Ingrese la clave de la cuenta: ");
+		String password = console.nextLine();
 		
 		Cuenta cuenta = contexto.buscarCuenta(numeroDeCuenta);
 		if (cuenta == null) {
 			throw new Exception("No existe cuenta con el número " + numeroDeCuenta);
+		}
+		
+		if(!cuenta.getClave().equals(password)) {
+			throw new Exception("Error");
 		}
 		
 		System.out.println("Ingrese el valor a retirar");
@@ -39,11 +45,17 @@ public class ComandoRetirar implements Comando {
 	
 		try {
 			long valorNumerico = Long.parseLong(valor);
+			saldoDespuesDeRetirar(cuenta, valorNumerico);
 			cuenta.retirar(valorNumerico);
 		
 		} catch (NumberFormatException e) {
 			throw new Exception("Valor a retirar no válido : " + valor);
 		}
+		return cuenta.getNumero();
+	}
+	
+	private long saldoDespuesDeRetirar(Cuenta cuenta, long valorNumerico) {
+		return cuenta.getSaldo() - valorNumerico;
 	}
 
 }

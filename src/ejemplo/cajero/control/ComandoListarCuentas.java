@@ -14,7 +14,7 @@ public class ComandoListarCuentas implements Comando {
 	}
 
 	@Override
-	public void ejecutar(Banco contexto) throws Exception {
+	public String ejecutar(Banco contexto) throws Exception {
 		
 		System.out.println("Listado de Cuentas");
 		System.out.println();
@@ -22,6 +22,7 @@ public class ComandoListarCuentas implements Comando {
 		for (Cuenta cuenta : contexto.getCuentas()) {
 			System.out.println(cuenta.getNumero() + " : $ " + cuenta.getSaldo());
 		}
+		return "";
 
 	}
 

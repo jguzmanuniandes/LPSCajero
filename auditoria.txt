@@ -1,0 +1,4 @@
+Transaccion [cuenta=1, tipoTransaccion=Consultar Saldo, localDateTime=2020-03-20T19:22:15.422]
+Transaccion [cuenta=2, tipoTransaccion=Retirar dinero, localDateTime=2020-03-20T19:22:24.157]
+Transaccion [cuenta=2, tipoTransaccion=Consultar Saldo, localDateTime=2020-03-20T19:31:37.492]
+Transaccion [cuenta=1, tipoTransaccion=Consignar dinero, localDateTime=2020-03-20T19:32:16.674]
